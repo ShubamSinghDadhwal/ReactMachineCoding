@@ -3,16 +3,28 @@ import {ReactComponent as UpArrow} from "./assets/up-arrow.svg";
 import {ReactComponent as DownArrow} from "./assets/down-arrow.svg";
 import Action from './Action';
 
-const Comment = ({ comment }) => {
+const Comment = ({
+    comment,
+    handleInsertNode,
+    handleEditNode,
+    handleDeleteNode,
+}) => {
     // sole respo -> render the comment it gets & if nested => recursively
     // call himself again with the every child comment
+
+    // **Please note -> every comment has its own comment component, so a id will be enough to identify it
+    // Also whenver i m clicking on any comment for reply, i m actually clicking on the parent, so parentId is known
 
     const [inputText, setInputText] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [showInput, setShowInput] = useState(false);
     const [expand, setExpand] = useState(false);
 
-    const handleAddComment = () => {};
+    const handleAddComment = () => {
+        setShowInput(true);
+        handleInsertNode(comment.id, inputText);
+        setInputText('');
+    };
     const handleDelete = () => {};
 
     return (
@@ -25,11 +37,7 @@ const Comment = ({ comment }) => {
                             value={inputText}
                             onChange={e => setInputText(e.target.value)}
                         />
-                        <button
-                            handleClick={handleAddComment}
-                        >
-                            Comment
-                        </button>
+                        <Action type="COMMENT" handleClick={handleAddComment} />
                     </div>
                 )
                 : (
@@ -78,7 +86,13 @@ const Comment = ({ comment }) => {
                     </div>
                 )}
                 {comment.items.map(childComment => (
-                    <Comment comment={childComment} key={childComment.id} />
+                    <Comment
+                        key={childComment.id}
+                        comment={childComment}
+                        handleInsertNode={handleInsertNode}
+                        handleEditNode={handleEditNode}
+                        handleDeleteNode={handleDeleteNode}
+                    />
                 ))}
             </div>
         </>

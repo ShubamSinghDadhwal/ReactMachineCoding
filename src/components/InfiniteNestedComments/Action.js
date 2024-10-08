@@ -2,9 +2,9 @@ import React from 'react'
 
 const Action = ({ type, handleClick }) => {
   return (
-    <div onClick={handleClick}>
+    <button onClick={handleClick}>
         {type}
-    </div>
+    </button>
   )
 }
 
