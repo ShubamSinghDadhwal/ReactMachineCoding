@@ -12,9 +12,7 @@ const Comment = ({ comment }) => {
     const [showInput, setShowInput] = useState(false);
     const [expand, setExpand] = useState(false);
 
-    const handleAdd = () => {};
-    const handleReply = () => {};
-    const handleSave = () => {};
+    const handleAddComment = () => {};
     const handleDelete = () => {};
 
     return (
@@ -28,7 +26,7 @@ const Comment = ({ comment }) => {
                             onChange={e => setInputText(e.target.value)}
                         />
                         <button
-                            handleClick={handleAdd}
+                            handleClick={handleAddComment}
                         >
                             Comment
                         </button>
@@ -40,7 +38,7 @@ const Comment = ({ comment }) => {
                         <div style={{ display: 'flex', gap: 10 }}>
                             {editMode ? (
                                 <>
-                                    <Action type="SAVE" handleClick={handleSave} />
+                                    <Action type="SAVE" handleClick={handleAddComment} />
                                     <Action type="CANCEL" handleClick={() => setEditMode(false)} />
                                 </>
                             ) : (
@@ -75,7 +73,7 @@ const Comment = ({ comment }) => {
                             type="text"
                             onChange={e => setInputText(e.target.value)}
                         />
-                        <Action type="REPLY" handleClick={handleReply} />
+                        <Action type="REPLY" handleClick={handleAddComment} />
                         <Action type="CANCEL" handleClick={() => setShowInput(false)} />
                     </div>
                 )}
