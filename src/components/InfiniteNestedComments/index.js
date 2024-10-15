@@ -1,25 +1,32 @@
 import React, { useState } from 'react'
 import Comment from './Comment';
-import { comments } from './data';
+// import { comments } from './data';
 import useNode from './hooks/useNode';
 
 const InfiniteNestedComments = () => {
     const {insertNode, editNode, deleteNode} = useNode();
-    const [commentsData, setCommentsData] = useState(comments);
+    const [commentsData, setCommentsData] = useState({
+        id: '1',
+        items: [],
+    });
 
     const handleInsertNode = (parentId, value) => {
         const newCommentsData = insertNode(commentsData, parentId, value);
-        // setCommentsData(newCommentsData);
+        setCommentsData(newCommentsData);
     };
 
     const handleEditNode = (parentId, value) => {
+        console.log("edited data b4", commentsData);
         const newCommentsData = editNode(commentsData, parentId, value);
+        console.log("edited data after", newCommentsData);
         setCommentsData(newCommentsData);
     }
 
     const handleDeleteNode = (parentId, value) => {
         const newCommentsData = deleteNode(commentsData, parentId, value);
-        setCommentsData(newCommentsData);
+        // spreading is important as state is not detecting it
+        const temp = { ...newCommentsData };
+        setCommentsData(temp);
     }
 
     return (

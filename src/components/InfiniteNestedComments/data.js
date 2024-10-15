@@ -36,7 +36,27 @@ export const comments = {
                     name: 'react',
                     items: []
                 }
-            ]
+            ],
+            // items: []
+        },
+    ]
+};
+
+export const commentsForRecursionVisualisation = {
+    id: '1',
+    // name: 'input box',
+    items: [
+        {
+            // CASE 1: Assume here we have to insert
+            id: '234',
+            name: 'hello',
+            items: []
+        },
+        {
+            id: '456',
+            name: 'js',
+            items: [],
+            // CASE 2: think how the empty items will be returned
         },
     ]
 };

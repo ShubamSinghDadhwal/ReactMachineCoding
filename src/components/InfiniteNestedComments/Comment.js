@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {ReactComponent as UpArrow} from "./assets/up-arrow.svg";
 import {ReactComponent as DownArrow} from "./assets/down-arrow.svg";
 import Action from './Action';
@@ -15,17 +15,33 @@ const Comment = ({
     // **Please note -> every comment has its own comment component, so a id will be enough to identify it
     // Also whenver i m clicking on any comment for reply, i m actually clicking on the parent, so parentId is known
 
+    const inputRef = useRef(null);
     const [inputText, setInputText] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [showInput, setShowInput] = useState(false);
     const [expand, setExpand] = useState(false);
 
+    useEffect(() => {
+        inputRef?.current?.focus();
+    }, [editMode])
+    
+
     const handleAddComment = () => {
-        setShowInput(true);
+        setExpand(true);
         handleInsertNode(comment.id, inputText);
+        // after inserting hide the input & clear input text
+        setShowInput(false);
         setInputText('');
     };
-    const handleDelete = () => {};
+
+    const handleEditComment = () => {
+        handleEditNode(comment.id, inputRef?.current?.innerText);
+        setEditMode(false);
+    }
+
+    const handleDelete = () => {
+        handleDeleteNode(comment.id);
+    };
 
     return (
         <>
@@ -42,12 +58,24 @@ const Comment = ({
                 )
                 : (
                     <div style={{ border: `1px solid #ddd`, padding: 10, marginTop: 10 }}>
-                        <span>{comment.name}</span>
+                        <span
+                            ref={inputRef}
+                            contentEditable={editMode}
+                            suppressContentEditableWarning={editMode}
+                        >
+                            {comment.name}
+                        </span>
                         <div style={{ display: 'flex', gap: 10 }}>
                             {editMode ? (
                                 <>
-                                    <Action type="SAVE" handleClick={handleAddComment} />
-                                    <Action type="CANCEL" handleClick={() => setEditMode(false)} />
+                                    <Action type="SAVE" handleClick={handleEditComment} />
+                                    <Action
+                                        type="CANCEL"
+                                        handleClick={() => {
+                                            inputRef.current.innerText = comment.name;
+                                            setEditMode(false);
+                                        }}
+                                    />
                                 </>
                             ) : (
                                 <>
@@ -82,7 +110,13 @@ const Comment = ({
                             onChange={e => setInputText(e.target.value)}
                         />
                         <Action type="REPLY" handleClick={handleAddComment} />
-                        <Action type="CANCEL" handleClick={() => setShowInput(false)} />
+                        <Action
+                            type="CANCEL"
+                            handleClick={() => {
+                                if (comment.items?.length === 0) setExpand(false);
+                                setShowInput(false);
+                            }}
+                        />
                     </div>
                 )}
                 {comment.items.map(childComment => (
